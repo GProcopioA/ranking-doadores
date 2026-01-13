@@ -4,20 +4,50 @@ import React, { useState, useMemo } from "react";
 // 1. CONFIGURAÇÃO DOS ITENS, PONTUAÇÃO E CORES
 // =========================================================================
 const ITEM_POINTS = {
-  "Cesta Básica (Roupas/Alimentos)": 100,
-  "Livro (Didático/Ficção)": 20,
-  "Brinquedo (Novo ou Usado)": 30,
-  "Material de Limpeza (1 Unidade)": 10,
-  "Móvel (Ex: Cadeira, Mesa)": 250,
+  "Pacote de fralda (G)": 30,
+  "Pacote de fralda (P)": 30,
+  "Sacola Brinquedos (1 Unidade)": 20,
+  "Macarrão (1 Pacote)": 5,
+  "Leite (1 Litro)": 5,
+  "Feijão (1 Kg)": 5,
+  "Arroz (1 Kg)": 5,
+  "Farinha de Mandioca (1 Unidade)": 3,
+  "Sabonete Líquido (1 Unidade)": 3,
+  "Lenço Umedecido (1 Pacote)": 3,
+  "Molho de Tomate (1 Pacote)": 3,
+  "Farinha de Trigo (1 Kg)": 3,
+  "Desifetante (1 Unidade)": 3,
+  "Detergente (1 Unidade)": 3,
+  "Veja (1 Unidade)": 3,
+  "Óleo (1 Litro)": 3,
+  "Açúcar (1 Kg)": 3,
+  "Café (1 Kg)": 3,
+  "Sal (1 Kg)": 3,
+  "Dinheiro (1 Real)": 1,
 };
 
 // Paleta de Cores consistente para as tags e o gráfico de barras
 const ITEM_COLORS = {
-  "Cesta Básica (Roupas/Alimentos)": "#ff6384", // Rosa
-  "Livro (Didático/Ficção)": "#36a2eb", // Azul
-  "Brinquedo (Novo ou Usado)": "#ffcd56", // Amarelo
-  "Material de Limpeza (1 Unidade)": "#4bc0c0", // Ciano
-  "Móvel (Ex: Cadeira, Mesa)": "#9966ff", // Roxo
+  "Pacote de fralda (G)": "#ff6384", // Rosa
+  "Pacote de fralda (P)": "#fd6384", // Rosa
+  "Feijão (1 Kg)": "#36a2eb", // Azul
+  "Lenço Umedecido (1 Pacote)": "#ffcd56", // Amarelo
+  "Macarrão (1 Pacote)": "#4bc0c0", // Ciano
+  "Açúcar (1 Kg)": "#9966ff", // Roxo
+  "Sacola Brinquedos (1 Unidade)": "#764e28",
+  "Leite (1 Litro)": "#cd6c12",
+  "Arroz (1 Kg)": "#0b290c",
+  "Farinha de Mandioca (1 Unidade)": "#9044ca",
+  "Sabonete Líquido (1 Unidade)": "#a16161",
+  "Molho de Tomate (1 Pacote)": "#5a0404",
+  "Farinha de Trigo (1 Kg)": "#45f7bf",
+  "Desifetante (1 Unidade)": "#4845f7",
+  "Detergente (1 Unidade)": "#ccff00",
+  "Veja (1 Unidade)": "#190379",
+  "Óleo (1 Litro)": "#67470b",
+  "Café (1 Kg)": "#381a0a",
+  "Sal (1 Kg)": "#f0f2f1",
+  "Dinheiro (1 Real)": "#11d73f",
 };
 
 // =========================================================================
@@ -27,14 +57,71 @@ const ITEM_COLORS = {
 // =========================================================================
 const RAW_DONATION_DATA = [
   // Exemplo de Doações:
-  "Ana Silva,Cesta Básica (Roupas/Alimentos),2",
-  "João Pereira,Livro (Didático/Ficção),15",
-  "Ana Silva,Material de Limpeza (1 Unidade),5",
-  "Carlos Souza,Brinquedo (Novo ou Usado),10",
-  "João Pereira,Cesta Básica (Roupas/Alimentos),1",
-  "Maria Santos,Móvel (Ex: Cadeira, Mesa),1",
-  "Carlos Souza,Livro (Didático/Ficção),5",
-  "Maria Santos,Material de Limpeza (1 Unidade),20",
+  "Bruno,Pacote de fralda (G),1",
+  "Bruno,Feijão (1 Kg),1",
+  "Bruno,Lenço Umedecido (1 Pacote),1",
+  "Rafael,Pacote de fralda (G),1",
+  "Rafael,Feijão (1 Kg),1",
+  "Rafael,Lenço Umedecido (1 Pacote),1",
+  "Biel Lucas,Macarrão (1 Pacote),3",
+  "Biel Lucas,Açúcar (1 Kg),1",
+  "Biel Lucas,Leite (1 Litro),1",
+  "Renan,Pacote de fralda (P),1",
+  "Renan,Feijão (1 Kg),1",
+  "Renan,Lenço Umedecido (1 Pacote),1",
+  "Belini,Arroz (1 Kg),10",
+  "Belini,Feijão (1 Kg),3",
+  "Belini,Óleo (1 Litro),2",
+  "Belini,Leite (1 Litro),4",
+  "Belini,Açúcar (1 Kg),4",
+  "Belini,Macarrão (1 Pacote),4",
+  "Andrew,Pacote de fralda (G),1",
+  "Andrew,Lenço Umedecido (1 Pacote),3",
+  "Andrew,Sabonete Líquido (1 Unidade),2",
+  "Andrew,Sacola Brinquedos (1 Unidade),1",
+  "Wata,Farinha de Trigo (1 Kg),1",
+  "Wata,Açúcar (1 Kg),1",
+  "Wata,Macarrão (1 Pacote),4",
+  "Wata,Óleo (1 Litro),2",
+  "Caio,Leite (1 Litro),1",
+  "Caio,Macarrão (1 Pacote),1",
+  "Caio,Açúcar (1 Kg),1",
+  "Caio,Detergente (1 Unidade),1",
+  "Caio,Veja (1 Unidade),1",
+  "Marquinhos,Feijão (1 Kg),1",
+  "Marquinhos,Detergente (1 Unidade),1",
+  "Matheus,Arroz (1 Kg),5",
+  "Matheus,Dinheiro (1 Real),75",
+  "Rodrigo,Leite (1 Litro),2",
+  "Rodrigo,Macarrão (1 Pacote),2",
+  "Rodrigo,Desifetante (1 Unidade),1",
+  "Vinicius,Arroz (1 Kg),10",
+  "Vinicius,Açúcar (1 Kg),2",
+  "Vinicius,Feijão (1 Kg),2",
+  "Vinicius,Café (1 Kg),1",
+  "Vinicius,Macarrão (1 Pacote),1",
+  "Vinicius,Molho de Tomate (1 Pacote),1",
+  "Vinicius,Farinha de Trigo (1 Kg),1",
+  "Vinicius,Farinha de Mandioca (1 Unidade),1",
+  "Vinicius,Sal (1 Kg),1",
+  "Vinicius,Óleo (1 Litro),2",
+  "Vilela,Arroz (1 Kg),1",
+  "Vilela,Desifetante (1 Unidade),1",
+  "Vilela,Leite (1 Litro),1",
+  "Carriel,Dinheiro (1 Real),50",
+  "Rato,Dinheiro (1 Real),30",
+  "Gustavo,Feijão (1 Kg),2",
+  "Gustavo,Arroz (1 Kg),1",
+  "Gustavo,Lenço Umedecido (1 Pacote),1",
+  "Gustavo,Pacote de fralda (G),1",
+  "Gustavo,Macarrão (1 Pacote),1",
+  "Gustavo,Dinheiro (1 Real),100",
+  "Adão,Dinheiro (1 Real),50",
+  "Luiz,Dinheiro (1 Real),50",
+  "Galdino,Pacote de fralda (P),2",
+  "Larissa,Lenço Umedecido (1 Pacote),4",
+  "Feh Ribas,Dinheiro (1 Real),40",
+  "Yago,Dinheiro (1 Real),50",
 ];
 
 // =========================================================================
